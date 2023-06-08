@@ -15,10 +15,10 @@ class OptionsDialog(QDialog):
 	def __init__(self):
 		super().__init__()
 		self.setWindowTitle("Auto-Unsuspend Options")
-		self.setMinimumSize(250, 100)
+		self.setMinimumSize(350, 150)
 
 		# Create rule button
-		self.create_rule_button = QPushButton("Create rule")
+		self.create_rule_button = QPushButton("Add rule")
 		self.create_rule_button.clicked.connect(self.show_create_rule_dialog)
 
 		# Save buton
@@ -28,9 +28,18 @@ class OptionsDialog(QDialog):
 		# Dialog layout
 		layout = QGridLayout()
 		self.setLayout(layout)
+		# Add titles here and then a thin separator line below
+		# logic that if .config is empty show QLabel in grey that No current rules
+		layout.addWidget(QLabel("<b>Name</b>"), 0, 0, Qt.AlignCenter)
+		layout.addWidget(QLabel("<b>Tag</b>"), 0, 1, Qt.AlignCenter)
+		layout.addWidget(QLabel("<b>Count</b>"), 0, 2, Qt.AlignCenter)
+		layout.addWidget(QLabel("<b>Every (days)</b>"), 0, 3, Qt.AlignCenter)
+		layout.addWidget(QLabel("<b>Active</b>"), 0, 4, Qt.AlignCenter)
 
-		layout.addWidget(QLabel("<b> Rules: </b>"), 0, 0)
-		layout.addWidget(self.create_rule_button, 1, 0, Qt.AlignCenter)
+		# Logic for when there are no rules set
+		layout.addWidget(QLabel("No current rules"), 1, 0, 2, 5, Qt.AlignCenter)
+
+		layout.addWidget(self.create_rule_button, 3, 0, 2, 5, Qt.AlignCenter)
 		#layout.addWidget(self.save_button)
 		self.setLayout(layout)
 
