@@ -18,9 +18,6 @@ class CreateRuleDialog(QDialog):
 		self.setWindowTitle("Create Unsuspend Rule")
 		self.parent = parent  # Store the parent
 
-		showInfo(f"Parent is: {self.parent}, type: {type(self.parent)}")  # This line is new
-
-
 		# Dialog layout
 		layout = QGridLayout()
 		self.setLayout(layout)
@@ -61,12 +58,14 @@ class CreateRuleDialog(QDialog):
 		rule_dict["count"] = selected_count
 		rule_dict["days"] = selected_days
 
-		const.CONFIG["Rules"][selected_rule_name] = rule_dict
-
-		mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
-		# Reload Meta and refresh options_dialog screen
-		const.META = const.load_meta(const.META_PATH)
-		if self.parent is not None:
-			showInfo("parent is not None")
-			self.parent.refresh() 
-		self.close()
+		# Check not to overwrite rules in the dictionary
+		if selected_rule_name in const.CONFIG["Rules"].keys():
+			showInfo("Rule already exists with that name, please choose another name.")
+		else:
+			const.CONFIG["Rules"][selected_rule_name] = rule_dict
+			mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
+			# Reload Meta and refresh options_dialog screen
+			const.META = const.load_meta(const.META_PATH)
+			if self.parent is not None:
+				self.parent.refresh() 
+			self.close()

@@ -22,11 +22,20 @@ class OptionsDialog(QDialog):
 		self.create_rule_button = QPushButton("Add rule")
 		self.create_rule_button.clicked.connect(self.show_create_rule_dialog)
 
+        # Create a QWidget that will hold your QGridLayout
+		self.gridWidget = QWidget()
+		self.layout = QGridLayout(self.gridWidget)
 
-		# Dialog layout
-		self.layout = QGridLayout()
-		self.setLayout(self.layout)
-		
+        # Create a QScrollArea and set its widget to the QWidget
+		self.scrollArea = QScrollArea()
+		self.scrollArea.setWidgetResizable(True)
+		self.scrollArea.setWidget(self.gridWidget)
+
+        # Set the QScrollArea as the main layout of your dialog
+		self.mainLayout = QVBoxLayout()
+		self.mainLayout.addWidget(self.scrollArea)
+		self.setLayout(self.mainLayout)
+
 		self.populate_layout()
 
 	def populate_layout(self):
@@ -77,7 +86,6 @@ class OptionsDialog(QDialog):
 		self.crd.exec()
 
 	def refresh(self):
-		showInfo("Refresh")
 		# Reload the data
 		const.META = const.load_meta(const.META_PATH)
 		self.populate_layout()  # Call this to re-populate the layout
