@@ -11,10 +11,10 @@ def load_meta(path: str):
 	if os.path.isfile(path):
 		with open(path, "r") as file:
 			META = json.load(file)
+			return META
 	else:
 		pass
-	return META
-
+		
 # Global variables
 ADDON_NAME = "auto-unsuspend"
 CONFIG = mw.addonManager.getConfig(ADDON_NAME)

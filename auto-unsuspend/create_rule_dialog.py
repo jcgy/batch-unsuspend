@@ -12,14 +12,18 @@ from . import const
 
 # Create Rule window
 class CreateRuleDialog(QDialog):
-	def __init__(self):
-		super().__init__()
+
+	def __init__(self, parent=None):
+		super(CreateRuleDialog, self).__init__(parent)
 		self.setWindowTitle("Create Unsuspend Rule")
+		self.parent = parent  # Store the parent
+
+		showInfo(f"Parent is: {self.parent}, type: {type(self.parent)}")  # This line is new
+
 
 		# Dialog layout
 		layout = QGridLayout()
 		self.setLayout(layout)
-		self.rule_saved = pyqtSignal()
 		# Create Save button
 		self.save_button = QPushButton("Save")
 		self.save_button.clicked.connect(self.save_options)
@@ -62,4 +66,7 @@ class CreateRuleDialog(QDialog):
 		mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
 		# Reload Meta and refresh options_dialog screen
 		const.META = const.load_meta(const.META_PATH)
+		if self.parent is not None:
+			showInfo("parent is not None")
+			self.parent.refresh() 
 		self.close()
