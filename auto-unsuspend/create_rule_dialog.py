@@ -8,17 +8,18 @@ from aqt.qt import *
 import glob
 import os
 
-from .const import *
+from . import const
 
 # Create Rule window
 class CreateRuleDialog(QDialog):
 	def __init__(self):
 		super().__init__()
 		self.setWindowTitle("Create Unsuspend Rule")
+
 		# Dialog layout
 		layout = QGridLayout()
 		self.setLayout(layout)
-
+		self.rule_saved = pyqtSignal()
 		# Create Save button
 		self.save_button = QPushButton("Save")
 		self.save_button.clicked.connect(self.save_options)
@@ -47,7 +48,6 @@ class CreateRuleDialog(QDialog):
 	# Save options
 	def save_options(self):
 		selected_rule_name = self.rule_name.text()
-		showInfo(selected_rule_name)
 		selected_tag = self.tag_box.currentText()
 		selected_count = self.count_box.value()
 		selected_days = self.days_box.value()
@@ -57,7 +57,9 @@ class CreateRuleDialog(QDialog):
 		rule_dict["count"] = selected_count
 		rule_dict["days"] = selected_days
 
-		CONFIG["Rules"][selected_rule_name] = rule_dict
+		const.CONFIG["Rules"][selected_rule_name] = rule_dict
 
-		mw.addonManager.writeConfig(ADDON_NAME, CONFIG)
+		mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
+		# Reload Meta and refresh options_dialog screen
+		const.META = const.load_meta(const.META_PATH)
 		self.close()
