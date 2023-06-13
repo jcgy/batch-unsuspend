@@ -60,13 +60,16 @@ class CreateRuleDialog(QDialog):
 		rule_dict["active"] = True
 
 		# Check not to overwrite rules in the dictionary
+		# Have to save to CONFIG for the first rule as meta.json doesn't exist
 		if selected_rule_name in const.CONFIG["Rules"].keys():
 			showInfo("Rule already exists with that name, please choose another name.")
 		else:
 			const.CONFIG["Rules"][selected_rule_name] = rule_dict
 			mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
-			# Reload Meta and refresh options_dialog screen
-			const.META = const.load_meta(const.META_PATH)
+			# Reload Config/meta and refresh options_dialog screen
+			const.CONFIG = const.CONFIG
 			if self.parent is not None:
+				showInfo(f"Config: {const.CONFIG}")
+				showInfo(f"Meta: {const.META}")
 				self.parent.refresh() 
 			self.close()

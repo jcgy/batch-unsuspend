@@ -117,10 +117,10 @@ class OptionsDialog(QDialog):
 		const.META = const.load_meta(const.META_PATH)
 		self.populate_layout()  # Call this to re-populate the layout
 		self.exec()
-	# Toggle active
+
 	def update_active_state(self, rule_name, state):
 		# Update the dictionary value based on the new state of the radio button
-		const.META['config']['Rules'][rule_name]['active'] = state
+		self.const.META['config']['Rules'][rule_name]['active'] = state
 		# The changes are going to be entered as a value to a config key by defaul so remove this here
 		updated_meta = const.META["config"]
 		mw.addonManager.writeConfig(const.ADDON_NAME, updated_meta)
@@ -137,4 +137,21 @@ class OptionsDialog(QDialog):
 		menu.addAction(edit_action)
 		menu.addAction(delete_action)
 		# Show the menu at the position of the button
-		menu.exec_(button.mapToGlobal(QPoint(0, 0)))
+		menu.exec_(button.mapToGlobal(QPoint(0, 0))) # NEEDS SORTING FOR WHEN MULTIPLE RUELS ON SCREEN
+
+	def delete_rule(self, rule_name):
+		# writeConfig is jst writing to META, save config is saving to META remove all instances of META and just go through the CONFIG
+		# Update the dictionary value to remove the rule_name key from config and meta
+		const.META['config']['Rules'].pop(rule_name, None)
+		const.CONFIG['Rules'].pop(rule_name, None)
+		# The changes are going to be entered as a value to a config key by defaul so remove this here
+		updated_meta = const.META["config"]
+		mw.addonManager.writeConfig(const.ADDON_NAME, updated_meta)
+		# Reload the Meta file so that the version in RAM matches the version on disk
+		const.META = const.load_meta(const.META_PATH)
+		# Remove the meta file if there are no rules left
+		if len(const.META["config"]["Rules"]) == 0:
+			os.remove(const.META_PATH)
+		# Then refresh the main options screen to get updated META
+		self.refresh()
+
