@@ -34,7 +34,6 @@ class CreateRuleDialog(QDialog):
 		# Initialise values and handle editing of existing rules
 		if self.rule_edit is not None:
 			self.rule_name = QLineEdit(text=f"{rule_edit}")
-			self.rule_name.setReadOnly(True)
 			self.tag_box = QComboBox()
 			tags = mw.col.tags.all()
 			self.tag_box.addItems(tags)
@@ -71,7 +70,7 @@ class CreateRuleDialog(QDialog):
 		rule_dict["active"] = True
 
 		# Check not to overwrite rules in the dictionary when not in edit mode
-		if self.rule_edit is None:
+		if self.rule_edit is None: # Creating an entirely new rule
 			if selected_rule_name in const.CONFIG["Rules"].keys():
 				showInfo("Rule already exists with that name, please choose another name.")
 			else:
@@ -82,7 +81,12 @@ class CreateRuleDialog(QDialog):
 				if self.parent is not None:
 					self.parent.refresh() 
 				self.close()
-		else:
+		else: # Editing a currently exising rule
+				# Remove the current rule from the dict - this supports deliberate renaming of a rule
+				showInfo(f"rule_edit: {self.rule_edit}")
+				showInfo(f"config: {const.CONFIG}")
+				const.CONFIG["Rules"].pop(self.rule_edit, None)
+				# Save as a new rule
 				const.CONFIG["Rules"][selected_rule_name] = rule_dict
 				mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
 				# Reload Config/meta and refresh options_dialog screen
