@@ -13,10 +13,11 @@ from . import const
 # Create Rule window
 class CreateRuleDialog(QDialog):
 
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, rule_edit=None):
 		super(CreateRuleDialog, self).__init__(parent)
 		self.setWindowTitle("Create Unsuspend Rule")
 		self.parent = parent  # Store the parent
+		self.rule_edit = rule_edit
 
 		# Dialog layout
 		layout = QGridLayout()
@@ -30,13 +31,23 @@ class CreateRuleDialog(QDialog):
 		layout.addWidget(QLabel("Cards"), 0, 2, Qt.AlignCenter)
 		layout.addWidget(QLabel("Every day(s)"), 0, 3, Qt.AlignCenter)
 		
-		# Initialise values
-		self.rule_name = QLineEdit()
-		self.tag_box = QComboBox()
-		tags = mw.col.tags.all()
-		self.tag_box.addItems(tags)
-		self.cards_box = QSpinBox(value=0, minimum=1, maximum=999)
-		self.days_box = QSpinBox(value=1, minimum=1, maximum=30)
+		# Initialise values and handle editing of existing rules
+		if self.rule_edit is not None:
+			self.rule_name = QLineEdit(text=f"{rule_edit}")
+			self.rule_name.setReadOnly(True)
+			self.tag_box = QComboBox()
+			tags = mw.col.tags.all()
+			self.tag_box.addItems(tags)
+			self.tag_box.setCurrentText(f"{ const.META['config']['Rules'][rule_edit]['tag'] }")
+			self.cards_box = QSpinBox(value=const.META['config']['Rules'][rule_edit]['cards'], minimum=1, maximum=999)
+			self.days_box = QSpinBox(value=const.META['config']['Rules'][rule_edit]['days'], minimum=1, maximum=30)
+		else:
+			self.rule_name = QLineEdit()
+			self.tag_box = QComboBox()
+			tags = mw.col.tags.all()
+			self.tag_box.addItems(tags)
+			self.cards_box = QSpinBox(value=0, minimum=1, maximum=999)
+			self.days_box = QSpinBox(value=1, minimum=1, maximum=30)
 
 		# Add widgets to gird
 		layout.addWidget(self.rule_name, 1, 0)
@@ -59,17 +70,23 @@ class CreateRuleDialog(QDialog):
 		rule_dict["days"] = selected_days
 		rule_dict["active"] = True
 
-		# Check not to overwrite rules in the dictionary
-		# Have to save to CONFIG for the first rule as meta.json doesn't exist
-		if selected_rule_name in const.CONFIG["Rules"].keys():
-			showInfo("Rule already exists with that name, please choose another name.")
+		# Check not to overwrite rules in the dictionary when not in edit mode
+		if self.rule_edit is None:
+			if selected_rule_name in const.CONFIG["Rules"].keys():
+				showInfo("Rule already exists with that name, please choose another name.")
+			else:
+				const.CONFIG["Rules"][selected_rule_name] = rule_dict
+				mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
+				# Reload Config/meta and refresh options_dialog screen
+				const.CONFIG = const.CONFIG
+				if self.parent is not None:
+					self.parent.refresh() 
+				self.close()
 		else:
-			const.CONFIG["Rules"][selected_rule_name] = rule_dict
-			mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
-			# Reload Config/meta and refresh options_dialog screen
-			const.CONFIG = const.CONFIG
-			if self.parent is not None:
-				showInfo(f"Config: {const.CONFIG}")
-				showInfo(f"Meta: {const.META}")
-				self.parent.refresh() 
-			self.close()
+				const.CONFIG["Rules"][selected_rule_name] = rule_dict
+				mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
+				# Reload Config/meta and refresh options_dialog screen
+				const.CONFIG = const.CONFIG
+				if self.parent is not None:
+					self.parent.refresh() 
+				self.close()

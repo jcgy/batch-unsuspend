@@ -155,3 +155,9 @@ class OptionsDialog(QDialog):
 		# Then refresh the main options screen to get updated META
 		self.refresh()
 
+	def edit_rule(self, rule_name):
+		# Show the create_rule_dialog and pass the rule name
+		self.crd = create_rule_dialog.CreateRuleDialog(self, rule_edit=rule_name)
+		self.crd.exec()
+
+
