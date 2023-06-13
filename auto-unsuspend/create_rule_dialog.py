@@ -57,6 +57,7 @@ class CreateRuleDialog(QDialog):
 		rule_dict["tag"] = selected_tag
 		rule_dict["count"] = selected_count
 		rule_dict["days"] = selected_days
+		rule_dict["active"] = True
 
 		# Check not to overwrite rules in the dictionary
 		if selected_rule_name in const.CONFIG["Rules"].keys():

@@ -8,6 +8,7 @@ from aqt.qt import *
 import glob
 import os
 import json
+from functools import partial
 from . import create_rule_dialog
 from . import const
 
@@ -16,7 +17,7 @@ class OptionsDialog(QDialog):
 	def __init__(self):
 		super().__init__()
 		self.setWindowTitle("Auto-Unsuspend Options")
-		self.setMinimumSize(350, 150)
+		self.setMinimumSize(450, 150)
 
 		# Create rule button
 		self.create_rule_button = QPushButton("Add rule")
@@ -74,6 +75,13 @@ class OptionsDialog(QDialog):
 				self.layout.addWidget(QLabel(f"{v['tag']}"), data_row, 1, Qt.AlignCenter)
 				self.layout.addWidget(QLabel(f"{v['count']}"), data_row, 2, Qt.AlignCenter)
 				self.layout.addWidget(QLabel(f"{v['days']}"), data_row, 3, Qt.AlignCenter)
+				# Create a QRadioButton
+				active_button = QCheckBox()
+				active_button.setChecked(v['active'])
+				# Connect its toggled signal to your slot function
+				# Use a lambda function to capture the current rule name (k)
+				active_button.toggled.connect(partial(self.update_active_state, k))
+				self.layout.addWidget(active_button, data_row, active_col, Qt.AlignCenter)
 				data_row += 1
 
 		# Add the Create rule button to layout
@@ -90,3 +98,12 @@ class OptionsDialog(QDialog):
 		const.META = const.load_meta(const.META_PATH)
 		self.populate_layout()  # Call this to re-populate the layout
 		self.exec()
+	# Toggle active
+	def update_active_state(self, rule_name, state):
+		# Update the dictionary value based on the new state of the radio button
+		const.META['config']['Rules'][rule_name]['active'] = state
+		showInfo(f"state: {state}")
+		showInfo(f"rule_name: {rule_name}")
+		showInfo(f"what is being changed: {const.META['config']['Rules'][rule_name]['active']}")
+		showInfo(f"{const.META}")
+		mw.addonManager.writeConfig(const.ADDON_NAME, const.META)
