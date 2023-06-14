@@ -7,6 +7,7 @@ from aqt.utils import showInfo, qconnect
 from aqt.qt import *
 import glob
 import os
+from datetime import datetime, timedelta
 
 from . import const
 
@@ -68,6 +69,7 @@ class CreateRuleDialog(QDialog):
 		rule_dict["cards"] = selected_cards
 		rule_dict["days"] = selected_days
 		rule_dict["active"] = True
+		rule_dict["last_unsuspend"] = datetime.now().strftime("%Y-%m-%d")
 
 		# Check not to overwrite rules in the dictionary when not in edit mode
 		if self.rule_edit is None: # Creating an entirely new rule
