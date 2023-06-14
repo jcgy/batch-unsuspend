@@ -66,8 +66,8 @@ class CreateRuleDialog(QDialog):
 
 		rule_dict = {}
 		rule_dict["tag"] = selected_tag
-		rule_dict["cards"] = selected_cards
-		rule_dict["days"] = selected_days
+		rule_dict["cards_count"] = selected_cards
+		rule_dict["interval_days"] = selected_days
 		rule_dict["active"] = True
 		rule_dict["last_unsuspend"] = datetime.now().strftime("%Y-%m-%d")
 
