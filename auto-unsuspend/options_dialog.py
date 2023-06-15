@@ -132,7 +132,7 @@ class OptionsDialog(QDialog):
 
 	def update_active_state(self, rule_name, state):
 		# Update the dictionary value based on the new state of the radio button
-		self.const.META['config']['Rules'][rule_name]['active'] = state
+		const.META['config']['Rules'][rule_name]['active'] = state
 		# The changes are going to be entered as a value to a config key by defaul so remove this here
 		updated_meta = const.META["config"]
 		mw.addonManager.writeConfig(const.ADDON_NAME, updated_meta)
