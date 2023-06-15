@@ -11,6 +11,7 @@ import json
 from functools import partial
 from . import create_rule_dialog
 from . import const
+from . import batch_logic
 
 # Options window
 class OptionsDialog(QDialog):
@@ -25,7 +26,10 @@ class OptionsDialog(QDialog):
 
 		# Create unsuspend button
 		self.unsuspend_button = QPushButton("Unsuspend")
-		#self.unsuspend_button.clicked.connect(self.unsuspend) # Connect to unsuspend logic
+		self.unsuspend_button.clicked.connect(batch_logic.unsuspend_cards)
+		# Then close the window afert the cards have been unsuspended
+		self.unsuspend_button.clicked.connect(self.reject)
+
 
         # Create a QWidget that will hold your QGridLayout
 		self.gridWidget = QWidget()
@@ -147,7 +151,7 @@ class OptionsDialog(QDialog):
 		# Show the menu at the position of the button
 		menu.exec_(button.mapToGlobal(QPoint(0, button.height())))
 
-	def delete_rule(self, rule_name):
+	def delete_rule(self, rule_name, button):
 		# writeConfig is jst writing to META, save config is saving to META remove all instances of META and just go through the CONFIG
 		# Update the dictionary value to remove the rule_name key from config and meta
 		const.META['config']['Rules'].pop(rule_name, None)
@@ -163,7 +167,7 @@ class OptionsDialog(QDialog):
 		# Then refresh the main options screen to get updated META
 		self.refresh()
 
-	def edit_rule(self, rule_name):
+	def edit_rule(self, rule_name, button):
 		# Show the create_rule_dialog and pass the rule name
 		self.crd = create_rule_dialog.CreateRuleDialog(self, rule_edit=rule_name)
 		self.crd.exec()

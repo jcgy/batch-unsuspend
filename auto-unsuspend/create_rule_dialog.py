@@ -38,7 +38,7 @@ class CreateRuleDialog(QDialog):
 			tags = mw.col.tags.all()
 			self.tag_box.addItems(tags)
 			self.tag_box.setCurrentText(f"{ const.META['config']['Rules'][rule_edit]['tag'] }")
-			self.cards_box = QSpinBox(value=const.META['config']['Rules'][rule_edit]['cards'], minimum=1, maximum=999)
+			self.cards_box = QSpinBox(value=const.META['config']['Rules'][rule_edit]['cards_count'], minimum=1, maximum=999)
 		else:
 			self.rule_name = QLineEdit()
 			self.tag_box = QComboBox()
@@ -78,8 +78,6 @@ class CreateRuleDialog(QDialog):
 				self.close()
 		else: # Editing a currently exising rule
 				# Remove the current rule from the dict - this supports deliberate renaming of a rule
-				showInfo(f"rule_edit: {self.rule_edit}")
-				showInfo(f"config: {const.CONFIG}")
 				const.CONFIG["Rules"].pop(self.rule_edit, None)
 				# Save as a new rule
 				const.CONFIG["Rules"][selected_rule_name] = rule_dict
