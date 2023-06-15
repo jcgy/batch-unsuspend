@@ -23,6 +23,10 @@ class OptionsDialog(QDialog):
 		self.create_rule_button = QPushButton("Add rule")
 		self.create_rule_button.clicked.connect(self.show_create_rule_dialog)
 
+		# Create unsuspend button
+		self.unsuspend_button = QPushButton("Unsuspend")
+		#self.unsuspend_button.clicked.connect(self.unsuspend) # Connect to unsuspend logic
+
         # Create a QWidget that will hold your QGridLayout
 		self.gridWidget = QWidget()
 		self.layout = QGridLayout(self.gridWidget)
@@ -42,6 +46,8 @@ class OptionsDialog(QDialog):
 	def populate_layout(self):
 		# Remove the create_rule_button from the layout
 		self.layout.removeWidget(self.create_rule_button)
+		self.layout.removeWidget(self.unsuspend_button)
+
 		# Clear the layout
 		while self.layout.count():
 			child = self.layout.takeAt(0)
@@ -68,6 +74,9 @@ class OptionsDialog(QDialog):
 		if not const.META:
 			self.layout.addWidget(QLabel("No current rules"), data_row, 0, 1, 4, Qt.AlignCenter)
 			data_row += 1
+			# Add the Create rule button to layout
+			self.layout.addWidget(self.create_rule_button, data_row, 0, 1, 4, Qt.AlignCenter)
+			self.setLayout(self.layout)
 		else:
 			rules = const.META['config']['Rules']
 			for k, v in rules.items():
@@ -81,13 +90,14 @@ class OptionsDialog(QDialog):
 				# Use a lambda function to capture the current rule name (k)
 				active_checkbox.toggled.connect(partial(self.update_active_state, k))
 				self.layout.addWidget(active_checkbox, data_row, active_col, Qt.AlignCenter)
-
 				# Incrememnt the data row
 				data_row += 1
-
-		# Add the Create rule button to layout
-		self.layout.addWidget(self.create_rule_button, data_row, 0, 1, 4, Qt.AlignCenter)
-		self.setLayout(self.layout)
+				# Add Unsuspend button to layout here so it is the first button created when Rules
+				# are already present so it will be highlighted
+				self.layout.addWidget(self.unsuspend_button, data_row, 0, 1, 2, Qt.AlignCenter)
+				# Add the Create rule button to layout
+				self.layout.addWidget(self.create_rule_button, data_row, 2, 1, 2, Qt.AlignCenter)
+				self.setLayout(self.layout)
 
 		# Place options buttons after create_rule_button so
 		# create_rule button is the first button added to layout
@@ -100,7 +110,7 @@ class OptionsDialog(QDialog):
 			for k, v in rules.items():	
 				# New QPushButton for the options
 				options_button = QPushButton("Options")
-				options_button.clicked.connect(lambda checked, rule_name=k: self.show_options_menu(rule_name, options_button))
+				options_button.clicked.connect(lambda checked, b=options_button, rule_name=k: self.show_options_menu(rule_name, b))
 				self.layout.addWidget(options_button, data_row, options_col, Qt.AlignCenter)
 				data_row += 1
 
@@ -129,13 +139,13 @@ class OptionsDialog(QDialog):
 		edit_action = QAction("Edit", self)
 		delete_action = QAction("Delete", self)
 		# Connect the actions to their respective slots
-		edit_action.triggered.connect(lambda: self.edit_rule(rule_name))
-		delete_action.triggered.connect(lambda: self.delete_rule(rule_name))
+		edit_action.triggered.connect(lambda _, b=button: self.edit_rule(rule_name, b))
+		delete_action.triggered.connect(lambda _, b=button: self.delete_rule(rule_name, b))
 		# Add the actions to the menu
 		menu.addAction(edit_action)
 		menu.addAction(delete_action)
 		# Show the menu at the position of the button
-		menu.exec_(button.mapToGlobal(QPoint(0, 0))) # NEEDS SORTING FOR WHEN MULTIPLE RUELS ON SCREEN
+		menu.exec_(button.mapToGlobal(QPoint(0, button.height())))
 
 	def delete_rule(self, rule_name):
 		# writeConfig is jst writing to META, save config is saving to META remove all instances of META and just go through the CONFIG
