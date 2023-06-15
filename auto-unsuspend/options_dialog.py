@@ -50,7 +50,6 @@ class OptionsDialog(QDialog):
 	def populate_layout(self):
 		# Remove the create_rule_button from the layout
 		self.layout.removeWidget(self.create_rule_button)
-		self.layout.removeWidget(self.unsuspend_button)
 
 		# Clear the layout
 		while self.layout.count():
@@ -126,7 +125,10 @@ class OptionsDialog(QDialog):
 
 	def refresh(self):
 		# Reload the data
-		const.META = const.load_meta(const.META_PATH)
+		try:
+			const.META = const.load_meta(const.META_PATH)
+		except:
+			pass
 		self.populate_layout()  # Call this to re-populate the layout
 		self.exec()
 
