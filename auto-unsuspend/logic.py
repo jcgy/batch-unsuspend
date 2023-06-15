@@ -1,14 +1,15 @@
 # Unsuspend Logic
 
-- Load Rules
+# Have to write a file that will rack the last day the unsuspend_cards function was called
+# so that time can be tracked while the computer is powered off. Then n can be multiplied
+# by the number of days elapsed so that all of the cards for the period would be unsuspended
+# as though they had accrued daily. This means the addon becomes tied to one system and you
+# would have to rememver to de-activate all rules before moving to another machine otherwise
+# on return you would get double the amount of unsuspended cards even thoguh you had dealt
+# with all on a daily basis on the other machine.
 
-- Load the time of day the unsuspend should happen - make it the same as the review day in main Anki
-
-- Link in with internal clock somehow to know how much time has elapsed
-
-- For each Rule
-	- Search for Suspended cards in tag, order by creation date, unsuspend count
-
+# Would also need to deal with when there are no rules in meta.json to iterate over, even though
+# the program had not been opened in a week
 
 from datetime import datetime, timedelta
 from aqt import mw
@@ -25,7 +26,6 @@ def unsuspend_cards():
 		interval_days = rule.get("interval_days")
 		tag = rule.get("tag")
 		n = rule.get("cards_count")
-
 		# Check if enough days have passed since last unsuspend
 		elapsed_time = datetime.now() - last_unsuspend
 		time_delta = timedelta(days=interval_days)
@@ -36,9 +36,7 @@ def unsuspend_cards():
 			card_ids = mw.col.findCards(f"tag:{tag} is:suspended")
 			# Sort by their ID (which is equivalent to sorting by creation date)
 			card_ids.sort()
-
 			mw.col.sched.unsuspendCards(card_ids[:n])
-
 			# Update the last_unsuspend date in the meta
 			rule['last_unsuspend'] = datetime.now().strftime("%Y-%m-%d")
 	# Write the updated meta file
