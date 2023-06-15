@@ -17,19 +17,17 @@ from . import batch_logic
 class OptionsDialog(QDialog):
 	def __init__(self):
 		super().__init__()
-		self.setWindowTitle("Auto-Unsuspend Options")
+		self.setWindowTitle("Batch-Unsuspend Options")
 		self.setMinimumSize(550, 150)
 
-		# Create rule button
+		# Initialise buttons
 		self.create_rule_button = QPushButton("Add rule")
 		self.create_rule_button.clicked.connect(self.show_create_rule_dialog)
 
-		# Create unsuspend button
-		self.unsuspend_button = QPushButton("Unsuspend")
+		self.unsuspend_button = QPushButton("Un-suspend")
 		self.unsuspend_button.clicked.connect(batch_logic.unsuspend_cards)
 		# Then close the window afert the cards have been unsuspended
 		self.unsuspend_button.clicked.connect(self.reject)
-
 
         # Create a QWidget that will hold your QGridLayout
 		self.gridWidget = QWidget()
@@ -50,7 +48,10 @@ class OptionsDialog(QDialog):
 	def populate_layout(self):
 		# Remove the create_rule_button from the layout
 		self.layout.removeWidget(self.create_rule_button)
-
+		try:
+			self.layout.removeWidget(self.unsuspend_button)
+		except:
+			pass
 		# Clear the layout
 		while self.layout.count():
 			child = self.layout.takeAt(0)
@@ -77,10 +78,15 @@ class OptionsDialog(QDialog):
 		if not const.META:
 			self.layout.addWidget(QLabel("No current rules"), data_row, 0, 1, 4, Qt.AlignCenter)
 			data_row += 1
+			# Remove Unsuspend button from persisting
+			self.layout.removeWidget(self.unsuspend_button)
+			self.unsuspend_button.hide()
 			# Add the Create rule button to layout
+			self.layout.removeWidget(self.create_rule_button)
 			self.layout.addWidget(self.create_rule_button, data_row, 0, 1, 4, Qt.AlignCenter)
 			self.setLayout(self.layout)
 		else:
+			self.unsuspend_button.show()
 			rules = const.META['config']['Rules']
 			for k, v in rules.items():
 				self.layout.addWidget(QLabel(f"{k}"), data_row, 0, Qt.AlignCenter)
@@ -95,10 +101,11 @@ class OptionsDialog(QDialog):
 				self.layout.addWidget(active_checkbox, data_row, active_col, Qt.AlignCenter)
 				# Incrememnt the data row
 				data_row += 1
+
 				# Add Unsuspend button to layout here so it is the first button created when Rules
 				# are already present so it will be highlighted
 				self.layout.addWidget(self.unsuspend_button, data_row, 0, 1, 2, Qt.AlignCenter)
-				# Add the Create rule button to layout
+				# Create rule button
 				self.layout.addWidget(self.create_rule_button, data_row, 2, 1, 2, Qt.AlignCenter)
 				self.setLayout(self.layout)
 
