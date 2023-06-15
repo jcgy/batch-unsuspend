@@ -30,7 +30,6 @@ class CreateRuleDialog(QDialog):
 		layout.addWidget(QLabel("Name"), 0, 0, Qt.AlignCenter)
 		layout.addWidget(QLabel("Tag"), 0, 1, Qt.AlignCenter)
 		layout.addWidget(QLabel("Cards"), 0, 2, Qt.AlignCenter)
-		layout.addWidget(QLabel("Every day(s)"), 0, 3, Qt.AlignCenter)
 		
 		# Initialise values and handle editing of existing rules
 		if self.rule_edit is not None:
@@ -40,36 +39,30 @@ class CreateRuleDialog(QDialog):
 			self.tag_box.addItems(tags)
 			self.tag_box.setCurrentText(f"{ const.META['config']['Rules'][rule_edit]['tag'] }")
 			self.cards_box = QSpinBox(value=const.META['config']['Rules'][rule_edit]['cards'], minimum=1, maximum=999)
-			self.days_box = QSpinBox(value=const.META['config']['Rules'][rule_edit]['days'], minimum=1, maximum=30)
 		else:
 			self.rule_name = QLineEdit()
 			self.tag_box = QComboBox()
 			tags = mw.col.tags.all()
 			self.tag_box.addItems(tags)
-			self.cards_box = QSpinBox(value=0, minimum=1, maximum=999)
-			self.days_box = QSpinBox(value=1, minimum=1, maximum=30)
+			self.cards_box = QSpinBox(minimum=1, maximum=999)
 
 		# Add widgets to gird
 		layout.addWidget(self.rule_name, 1, 0)
 		layout.addWidget(self.tag_box, 1, 1)
 		layout.addWidget(self.cards_box, 1, 2)
-		layout.addWidget(self.days_box, 1, 3)
 
-		layout.addWidget(self.save_button, 2, 0, 2, 4, Qt.AlignCenter)# Qt6,  alignment=Qt.AlignmentFlag.AlignRight)
+		layout.addWidget(self.save_button, 2, 0, 2, 3, Qt.AlignCenter)# Qt6,  alignment=Qt.AlignmentFlag.AlignRight)
 
 	# Save options
 	def save_options(self):
 		selected_rule_name = self.rule_name.text()
 		selected_tag = self.tag_box.currentText()
 		selected_cards = self.cards_box.value()
-		selected_days = self.days_box.value()
 
 		rule_dict = {}
 		rule_dict["tag"] = selected_tag
 		rule_dict["cards_count"] = selected_cards
-		rule_dict["interval_days"] = selected_days
 		rule_dict["active"] = True
-		rule_dict["last_unsuspend"] = datetime.now().strftime("%Y-%m-%d")
 
 		# Check not to overwrite rules in the dictionary when not in edit mode
 		if self.rule_edit is None: # Creating an entirely new rule

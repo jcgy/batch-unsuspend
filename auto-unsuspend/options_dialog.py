@@ -55,27 +55,25 @@ class OptionsDialog(QDialog):
 		name_col = 0
 		tag_col = 1
 		cards_col = 2
-		days_col = 3
-		active_col = 4
-		options_col = 6
+		active_col = 3
+
+		options_col = 5
 
 		self.layout.addWidget(QLabel("<b>Rule Name</b>"), title_row, name_col, Qt.AlignCenter)
 		self.layout.addWidget(QLabel("<b>Tag</b>"), title_row, tag_col, Qt.AlignCenter)
 		self.layout.addWidget(QLabel("<b>Cards</b>"), title_row, cards_col, Qt.AlignCenter)
-		self.layout.addWidget(QLabel("<b>Every (days)</b>"), title_row, days_col, Qt.AlignCenter)
 		self.layout.addWidget(QLabel("<b>Active</b>"), title_row, active_col, Qt.AlignCenter)
 
 		# Logic for when there are no rules set
 		if not const.META:
-			self.layout.addWidget(QLabel("No current rules"), data_row, 0, 2, 6, Qt.AlignCenter)
+			self.layout.addWidget(QLabel("No current rules"), data_row, 0, 1, 4, Qt.AlignCenter)
 			data_row += 1
 		else:
 			rules = const.META['config']['Rules']
 			for k, v in rules.items():
 				self.layout.addWidget(QLabel(f"{k}"), data_row, 0, Qt.AlignCenter)
 				self.layout.addWidget(QLabel(f"{v['tag']}"), data_row, 1, Qt.AlignCenter)
-				self.layout.addWidget(QLabel(f"{v['cards']}"), data_row, 2, Qt.AlignCenter)
-				self.layout.addWidget(QLabel(f"{v['days']}"), data_row, 3, Qt.AlignCenter)
+				self.layout.addWidget(QLabel(f"{v['cards_count']}"), data_row, 2, Qt.AlignCenter)
 				# Create a QRadioButton
 				active_checkbox = QCheckBox()
 				active_checkbox.setChecked(v['active'])
@@ -88,7 +86,7 @@ class OptionsDialog(QDialog):
 				data_row += 1
 
 		# Add the Create rule button to layout
-		self.layout.addWidget(self.create_rule_button, data_row, 0, 2, 6, Qt.AlignCenter)
+		self.layout.addWidget(self.create_rule_button, data_row, 0, 1, 4, Qt.AlignCenter)
 		self.setLayout(self.layout)
 
 		# Place options buttons after create_rule_button so
