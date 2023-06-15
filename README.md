@@ -18,4 +18,4 @@ When 'Un-suspend' is clicked the selected rules will be executed. Rules can be t
 
 ![options](./assets/rules_added.png)
 
-Currently tested and working on  `macOS Qt5.14 Anki 2.1.64` and Windows Q`t6.4.3 Anki 2.1.64`
+Currently tested and working on  `macOS Qt5.14 Anki 2.1.64` and Windows `Qt6.4.3 Anki 2.1.64`
