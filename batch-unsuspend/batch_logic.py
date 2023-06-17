@@ -27,7 +27,16 @@ def unsuspend_cards():
 				card_ids = mw.col.findCards(f"tag:{tag} is:suspended")
 				# Sort by their ID (which is equivalent to sorting by creation date)
 				card_ids.sort()
-				# Unsuspend the cards
-				mw.col.sched.unsuspendCards(card_ids[:n])
+				n_sus_available = len(card_ids)
+				# Give user warning if not enough to unsuspend
+				if n_sus_available == 0:
+					showInfo(f"{rule_name} has no cards left available to un-suspend")
+				elif n_sus_available < n:
+					showInfo(f"{rule_name} had only {n_sus_available} card(s) left to un-suspend rather than {n}")
+					# Unsuspend the remaining availanble cards
+					mw.col.sched.unsuspendCards(card_ids[:n_sus_available])
+				else:
+					# Unsuspend the cards
+					mw.col.sched.unsuspendCards(card_ids[:n])
 		# Reset the collection to update UI
 		mw.reset()
