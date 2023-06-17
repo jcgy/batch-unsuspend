@@ -145,6 +145,8 @@ class OptionsDialog(QDialog):
 		# The changes are going to be entered as a value to a config key by defaul so remove this here
 		updated_meta = const.META["config"]
 		mw.addonManager.writeConfig(const.ADDON_NAME, updated_meta)
+		# Reload config
+		const.CONFIG = mw.addonManager.getConfig(const.ADDON_NAME)
 
 	def show_options_menu(self, rule_name, button):
 	# Create the QMenu and the actions

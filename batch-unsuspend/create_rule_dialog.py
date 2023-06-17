@@ -71,10 +71,8 @@ class CreateRuleDialog(QDialog):
 			else:
 				const.CONFIG["Rules"][selected_rule_name] = rule_dict
 				mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
-				# Reload Config/meta and refresh options_dialog screen
-				const.CONFIG = const.CONFIG
 				if self.parent is not None:
-					self.parent.refresh() 
+					self.parent.refresh()
 				self.close()
 		else: # Editing a currently exising rule
 				# Remove the current rule from the dict - this supports deliberate renaming of a rule
@@ -82,8 +80,6 @@ class CreateRuleDialog(QDialog):
 				# Save as a new rule
 				const.CONFIG["Rules"][selected_rule_name] = rule_dict
 				mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
-				# Reload Config/meta and refresh options_dialog screen
-				const.CONFIG = const.CONFIG
 				if self.parent is not None:
 					self.parent.refresh() 
 				self.close()
