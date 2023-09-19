@@ -16,7 +16,7 @@ def load_meta(path: str):
 		pass
 		
 # Global variables
-ADDON_NAME = "batch-unsuspend"
+ADDON_NAME = __name__.split(".")[0]
 CONFIG = mw.addonManager.getConfig(ADDON_NAME)
 META_PATH = os.path.join(mw.pm.base, f"addons21/{ADDON_NAME}/meta.json")
 META = load_meta(META_PATH)
