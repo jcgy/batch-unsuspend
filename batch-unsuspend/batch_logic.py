@@ -4,18 +4,12 @@ from . import const
 from aqt.utils import showInfo
 
 def unsuspend_cards():
-	# Get current rules set
-	META = const.CONFIG
-
 	if mw.col is None:
 		showInfo("mw.col is None")
 		# Collection is not available so return
 		return
 
-	# Load current config
-	META = const.CONFIG
-
-	for rule_name, rule in const.META.get("config", {}).get("Rules", {}).items():
+	for rule_name, rule in const.CONFIG.get("Rules", {}).items():
 		tag = rule.get("tag")
 		n = rule.get("cards_count")
 		active = rule.get("active")
