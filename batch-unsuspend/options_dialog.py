@@ -75,7 +75,7 @@ class OptionsDialog(QDialog):
 		self.layout.addWidget(QLabel("<b>Active</b>"), title_row, active_col, Qt.AlignCenter)
 
 		# Logic for when there are no rules set
-		if not const.META:
+		if not const.CONFIG["Rules"]:
 			self.layout.addWidget(QLabel("No current rules"), data_row, 0, 1, 4, Qt.AlignCenter)
 			data_row += 1
 			# Remove Unsuspend button from persisting
@@ -87,7 +87,7 @@ class OptionsDialog(QDialog):
 			self.setLayout(self.layout)
 		else:
 			self.unsuspend_button.show()
-			rules = const.META['config']['Rules']
+			rules = const.CONFIG['Rules']
 			for k, v in rules.items():
 				self.layout.addWidget(QLabel(f"{k}"), data_row, 0, Qt.AlignCenter)
 				self.layout.addWidget(QLabel(f"{v['tag']}"), data_row, 1, Qt.AlignCenter)
@@ -113,10 +113,10 @@ class OptionsDialog(QDialog):
 		# create_rule button is the first button added to layout
 		# and is given focus and stays blue (setFocus) doesn't work properly
 		data_row = 1
-		if not const.META:
+		if not const.CONFIG:
 			pass # This condition is already handled in the first above
 		else:
-			rules = const.META['config']['Rules']
+			rules = const.CONFIG["Rules"]
 			for k, v in rules.items():	
 				# New QPushButton for the options
 				options_button = QPushButton("Options")
@@ -133,7 +133,7 @@ class OptionsDialog(QDialog):
 	def refresh(self):
 		# Reload the data
 		try:
-			const.META = const.load_meta(const.META_PATH)
+			const.CONFIG = mw.addonManager.getConfig(ADDON_NAME)
 		except:
 			pass
 		self.populate_layout()  # Call this to re-populate the layout
@@ -141,10 +141,9 @@ class OptionsDialog(QDialog):
 
 	def update_active_state(self, rule_name, state):
 		# Update the dictionary value based on the new state of the radio button
-		const.META['config']['Rules'][rule_name]['active'] = state
+		const.CONFIG["Rules"][rule_name]['active'] = state
 		# The changes are going to be entered as a value to a config key by defaul so remove this here
-		updated_meta = const.META["config"]
-		mw.addonManager.writeConfig(const.ADDON_NAME, updated_meta)
+		mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
 		# Reload config
 		const.CONFIG = mw.addonManager.getConfig(const.ADDON_NAME)
 
@@ -165,16 +164,10 @@ class OptionsDialog(QDialog):
 	def delete_rule(self, rule_name, button):
 		# writeConfig is jst writing to META, save config is saving to META remove all instances of META and just go through the CONFIG
 		# Update the dictionary value to remove the rule_name key from config and meta
-		const.META['config']['Rules'].pop(rule_name, None)
 		const.CONFIG['Rules'].pop(rule_name, None)
-		# The changes are going to be entered as a value to a config key by defaul so remove this here
-		updated_meta = const.META["config"]
-		mw.addonManager.writeConfig(const.ADDON_NAME, updated_meta)
+		const.CONFIG = mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
 		# Reload the Meta file so that the version in RAM matches the version on disk
-		const.META = const.load_meta(const.META_PATH)
-		# Remove the meta file if there are no rules left
-		if len(const.META["config"]["Rules"]) == 0:
-			os.remove(const.META_PATH)
+		const.CONFIG = mw.addonManager.getConfig(const.ADDON_NAME)
 		# Then refresh the main options screen to get updated META
 		self.refresh()
 

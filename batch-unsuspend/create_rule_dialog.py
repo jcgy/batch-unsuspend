@@ -37,8 +37,8 @@ class CreateRuleDialog(QDialog):
 			self.tag_box = QComboBox()
 			tags = mw.col.tags.all()
 			self.tag_box.addItems(tags)
-			self.tag_box.setCurrentText(f"{ const.META['config']['Rules'][rule_edit]['tag'] }")
-			self.cards_box = QSpinBox(value=const.META['config']['Rules'][rule_edit]['cards_count'], minimum=1, maximum=999)
+			self.tag_box.setCurrentText(f"{ const.CONFIG['Rules'][rule_edit]['tag'] }")
+			self.cards_box = QSpinBox(value=const.CONFIG['Rules'][rule_edit]['cards_count'], minimum=1, maximum=999)
 		else:
 			self.rule_name = QLineEdit()
 			self.tag_box = QComboBox()
