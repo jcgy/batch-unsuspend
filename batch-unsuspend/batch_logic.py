@@ -11,6 +11,9 @@ def unsuspend_cards():
 
 	for rule_name, rule in const.CONFIG.get("Rules", {}).items():
 		tag = rule.get("tag")
+		# enclose tag name with quotes if contains parentheses
+		if "(" or ")" in tag:
+			tag = f'"{tag}"'
 		n = rule.get("cards_count")
 		active = rule.get("active")
 		# Set a checkpoint so batch unsuspend can be undone if needed
