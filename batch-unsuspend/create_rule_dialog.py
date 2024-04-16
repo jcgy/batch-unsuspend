@@ -38,12 +38,22 @@ class CreateRuleDialog(QDialog):
 			tags = mw.col.tags.all()
 			self.tag_box.addItems(tags)
 			self.tag_box.setCurrentText(f"{ const.CONFIG['Rules'][rule_edit]['tag'] }")
+			# Allow searching the tag box with popup
+			self.tag_box.setEditable(True)
+			self.tag_box.setInsertPolicy(QComboBox.NoInsert)
+			self.tag_box.completer().setCompletionMode(QCompleter.PopupCompletion)
+
 			self.cards_box = QSpinBox(value=const.CONFIG['Rules'][rule_edit]['cards_count'], minimum=1, maximum=999)
 		else:
 			self.rule_name = QLineEdit()
 			self.tag_box = QComboBox()
 			tags = mw.col.tags.all()
 			self.tag_box.addItems(tags)
+			# Allow searching the tag box with popup
+			self.tag_box.setEditable(True)
+			self.tag_box.setInsertPolicy(QComboBox.NoInsert)
+			self.tag_box.completer().setCompletionMode(QCompleter.PopupCompletion)
+
 			self.cards_box = QSpinBox(minimum=1, maximum=999)
 
 		# Add widgets to gird
