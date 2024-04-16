@@ -42,6 +42,7 @@ class CreateRuleDialog(QDialog):
 			self.tag_box.setEditable(True)
 			self.tag_box.setInsertPolicy(QComboBox.NoInsert)
 			self.tag_box.completer().setCompletionMode(QCompleter.PopupCompletion)
+			self.tag_box.completer().setFilterMode(Qt.MatchContains)
 
 			self.cards_box = QSpinBox(value=const.CONFIG['Rules'][rule_edit]['cards_count'], minimum=1, maximum=999)
 		else:
@@ -53,6 +54,7 @@ class CreateRuleDialog(QDialog):
 			self.tag_box.setEditable(True)
 			self.tag_box.setInsertPolicy(QComboBox.NoInsert)
 			self.tag_box.completer().setCompletionMode(QCompleter.PopupCompletion)
+			self.tag_box.completer().setFilterMode(Qt.MatchContains)
 
 			self.cards_box = QSpinBox(minimum=1, maximum=999)
 
