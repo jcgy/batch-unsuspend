@@ -18,7 +18,7 @@ class OptionsDialog(QDialog):
 	def __init__(self):
 		super().__init__()
 		self.setWindowTitle("Batch-Unsuspend Options")
-		self.setMinimumSize(550, 150)
+		self.setMinimumSize(950, 150) # can I pass the size here? 550 150
 
 		# Initialise buttons
 		self.create_rule_button = QPushButton("Add rule")
@@ -26,7 +26,7 @@ class OptionsDialog(QDialog):
 
 		self.unsuspend_button = QPushButton("Un-suspend")
 		self.unsuspend_button.clicked.connect(batch_logic.unsuspend_cards)
-		# Then close the window afert the cards have been unsuspended
+		# Then close the window after the cards have been unsuspended
 		self.unsuspend_button.clicked.connect(self.reject)
 
         # Create a QWidget that will hold your QGridLayout
@@ -108,6 +108,11 @@ class OptionsDialog(QDialog):
 				# Create rule button
 				self.layout.addWidget(self.create_rule_button, data_row, 2, 1, 2, Qt.AlignCenter)
 				self.setLayout(self.layout)
+
+			# Return dimensions and update window size to fit elements horizontally
+			size_hint = self.layout.sizeHint()
+			width = size_hint.width()
+			self.setMinimumSize(width+150, 550)
 
 		# Place options buttons after create_rule_button so
 		# create_rule button is the first button added to layout
