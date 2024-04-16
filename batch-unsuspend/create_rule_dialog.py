@@ -85,9 +85,10 @@ class CreateRuleDialog(QDialog):
 					self.parent.refresh()
 				self.close()
 		else: # Editing a currently exising rule
-				# Remove the current rule from the dict - this supports deliberate renaming of a rule
-				const.CONFIG["Rules"].pop(self.rule_edit, None)
-				# Save as a new rule
+				# Edit the dictionary object in 2 steps to preserve the order
+				# First rename the dictionary key in place (even if it hasn't changed)
+				const.CONFIG["Rules"] = {selected_rule_name if k == self.rule_edit else k:v for k,v in const.CONFIG["Rules"].items()}
+				# Then update the values
 				const.CONFIG["Rules"][selected_rule_name] = rule_dict
 				mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)
 				if self.parent is not None:
