@@ -40,9 +40,9 @@ class CreateRuleDialog(QDialog):
 			self.tag_box.setCurrentText(f"{ const.CONFIG['Rules'][rule_edit]['tag'] }")
 			# Allow searching the tag box with popup
 			self.tag_box.setEditable(True)
-			self.tag_box.setInsertPolicy(QComboBox.NoInsert)
-			self.tag_box.completer().setCompletionMode(QCompleter.PopupCompletion)
-			self.tag_box.completer().setFilterMode(Qt.MatchContains)
+			self.tag_box.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+			self.tag_box.completer().setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+			self.tag_box.completer().setFilterMode(Qt.MatchFlag.MatchContains)
 
 			self.cards_box = QSpinBox(value=const.CONFIG['Rules'][rule_edit]['cards_count'], minimum=1, maximum=999)
 		else:
@@ -52,9 +52,9 @@ class CreateRuleDialog(QDialog):
 			self.tag_box.addItems(tags)
 			# Allow searching the tag box with popup
 			self.tag_box.setEditable(True)
-			self.tag_box.setInsertPolicy(QComboBox.NoInsert)
-			self.tag_box.completer().setCompletionMode(QCompleter.PopupCompletion)
-			self.tag_box.completer().setFilterMode(Qt.MatchContains)
+			self.tag_box.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+			self.tag_box.completer().setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+			self.tag_box.completer().setFilterMode(Qt.MatchFlag.MatchContains)
 
 			self.cards_box = QSpinBox(minimum=1, maximum=999)
 

@@ -164,7 +164,7 @@ class OptionsDialog(QDialog):
 		menu.addAction(edit_action)
 		menu.addAction(delete_action)
 		# Show the menu at the position of the button
-		menu.exec_(button.mapToGlobal(QPoint(0, button.height())))
+		menu.exec(button.mapToGlobal(QPoint(0, button.height())))
 
 	def delete_rule(self, rule_name, button):
 		# writeConfig is jst writing to META, save config is saving to META remove all instances of META and just go through the CONFIG
@@ -180,5 +180,3 @@ class OptionsDialog(QDialog):
 		# Show the create_rule_dialog and pass the rule name
 		self.crd = create_rule_dialog.CreateRuleDialog(self, rule_edit=rule_name)
 		self.crd.exec()
-
-
