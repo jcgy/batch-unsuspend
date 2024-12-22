@@ -27,9 +27,9 @@ class CreateRuleDialog(QDialog):
 		self.save_button = QPushButton("Save")
 		self.save_button.clicked.connect(self.save_options)
 
-		layout.addWidget(QLabel("Name"), 0, 0, Qt.AlignCenter)
-		layout.addWidget(QLabel("Tag"), 0, 1, Qt.AlignCenter)
-		layout.addWidget(QLabel("Cards"), 0, 2, Qt.AlignCenter)
+		layout.addWidget(QLabel("Name"), 0, 0, Qt.AlignmentFlag.AlignCenter)
+		layout.addWidget(QLabel("Tag"), 0, 1, Qt.AlignmentFlag.AlignCenter)
+		layout.addWidget(QLabel("Cards"), 0, 2, Qt.AlignmentFlag.AlignCenter)
 		
 		# Initialise values and handle editing of existing rules
 		if self.rule_edit is not None:
@@ -63,7 +63,7 @@ class CreateRuleDialog(QDialog):
 		layout.addWidget(self.tag_box, 1, 1)
 		layout.addWidget(self.cards_box, 1, 2)
 
-		layout.addWidget(self.save_button, 2, 0, 2, 3, Qt.AlignCenter)# Qt6,  alignment=Qt.AlignmentFlag.AlignRight)
+		layout.addWidget(self.save_button, 2, 0, 2, 3, Qt.AlignmentFlag.AlignCenter)# Qt6,  alignment=Qt.AlignmentFlag.AlignRight)
 
 	# Save options
 	def save_options(self):

@@ -69,44 +69,44 @@ class OptionsDialog(QDialog):
 
 		options_col = 5
 
-		self.layout.addWidget(QLabel("<b>Rule Name</b>"), title_row, name_col, Qt.AlignCenter)
-		self.layout.addWidget(QLabel("<b>Tag</b>"), title_row, tag_col, Qt.AlignCenter)
-		self.layout.addWidget(QLabel("<b>Cards</b>"), title_row, cards_col, Qt.AlignCenter)
-		self.layout.addWidget(QLabel("<b>Active</b>"), title_row, active_col, Qt.AlignCenter)
+		self.layout.addWidget(QLabel("<b>Rule Name</b>"), title_row, name_col, Qt.AlignmentFlag.AlignCenter)
+		self.layout.addWidget(QLabel("<b>Tag</b>"), title_row, tag_col, Qt.AlignmentFlag.AlignCenter)
+		self.layout.addWidget(QLabel("<b>Cards</b>"), title_row, cards_col, Qt.AlignmentFlag.AlignCenter)
+		self.layout.addWidget(QLabel("<b>Active</b>"), title_row, active_col, Qt.AlignmentFlag.AlignCenter)
 
 		# Logic for when there are no rules set
 		if not const.CONFIG["Rules"]:
-			self.layout.addWidget(QLabel("No current rules"), data_row, 0, 1, 4, Qt.AlignCenter)
+			self.layout.addWidget(QLabel("No current rules"), data_row, 0, 1, 4, Qt.AlignmentFlag.AlignCenter)
 			data_row += 1
 			# Remove Unsuspend button from persisting
 			self.layout.removeWidget(self.unsuspend_button)
 			self.unsuspend_button.hide()
 			# Add the Create rule button to layout
 			self.layout.removeWidget(self.create_rule_button)
-			self.layout.addWidget(self.create_rule_button, data_row, 0, 1, 4, Qt.AlignCenter)
+			self.layout.addWidget(self.create_rule_button, data_row, 0, 1, 4, Qt.AlignmentFlag.AlignCenter)
 			self.setLayout(self.layout)
 		else:
 			self.unsuspend_button.show()
 			rules = const.CONFIG['Rules']
 			for k, v in rules.items():
-				self.layout.addWidget(QLabel(f"{k}"), data_row, 0, Qt.AlignCenter)
-				self.layout.addWidget(QLabel(f"{v['tag']}"), data_row, 1, Qt.AlignCenter)
-				self.layout.addWidget(QLabel(f"{v['cards_count']}"), data_row, 2, Qt.AlignCenter)
+				self.layout.addWidget(QLabel(f"{k}"), data_row, 0, Qt.AlignmentFlag.AlignCenter)
+				self.layout.addWidget(QLabel(f"{v['tag']}"), data_row, 1, Qt.AlignmentFlag.AlignCenter)
+				self.layout.addWidget(QLabel(f"{v['cards_count']}"), data_row, 2, Qt.AlignmentFlag.AlignCenter)
 				# Create a QRadioButton
 				active_checkbox = QCheckBox()
 				active_checkbox.setChecked(v['active'])
 				# Connect its toggled signal to your slot function
 				# Use a lambda function to capture the current rule name (k)
 				active_checkbox.toggled.connect(partial(self.update_active_state, k))
-				self.layout.addWidget(active_checkbox, data_row, active_col, Qt.AlignCenter)
+				self.layout.addWidget(active_checkbox, data_row, active_col, Qt.AlignmentFlag.AlignCenter)
 				# Incrememnt the data row
 				data_row += 1
 
 				# Add Unsuspend button to layout here so it is the first button created when Rules
 				# are already present so it will be highlighted
-				self.layout.addWidget(self.unsuspend_button, data_row, 0, 1, 2, Qt.AlignCenter)
+				self.layout.addWidget(self.unsuspend_button, data_row, 0, 1, 2, Qt.AlignmentFlag.AlignCenter)
 				# Create rule button
-				self.layout.addWidget(self.create_rule_button, data_row, 2, 1, 2, Qt.AlignCenter)
+				self.layout.addWidget(self.create_rule_button, data_row, 2, 1, 2, Qt.AlignmentFlag.AlignCenter)
 				self.setLayout(self.layout)
 
 			# Return dimensions and update window size to fit elements horizontally
@@ -126,7 +126,7 @@ class OptionsDialog(QDialog):
 				# New QPushButton for the options
 				options_button = QPushButton("Options")
 				options_button.clicked.connect(lambda checked, b=options_button, rule_name=k: self.show_options_menu(rule_name, b))
-				self.layout.addWidget(options_button, data_row, options_col, Qt.AlignCenter)
+				self.layout.addWidget(options_button, data_row, options_col, Qt.AlignmentFlag.AlignCenter)
 				data_row += 1
 
 
