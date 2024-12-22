@@ -26,6 +26,8 @@ Rules can be toggled on or off using their checkbox. Rules can be deleted or edi
 
 When 'Un-suspend' is clicked all of the the selected rules will be executed, and the cards will be unsuspended.
 
-Currently tested and working on  `macOS Qt5.14 Anki 2.1.64` and Windows `Qt6.4.3 Anki 2.1.64`
+Currently tested and working on
+* `macOS Qt5.14 Anki 2.1.64` and Windows `Qt6.4.3 Anki 2.1.64` (old branch)
+* `macOS 12+ Apple Silicon Qt6.6.2 Anki 24.11`
 
 * Please make sure to back up all of your decks before using. I have been using it personally for a while now without issue, but it is always better to be safe than sorry.
