@@ -20,14 +20,19 @@ Alternatively, copy the  `batch-unsuspend`  directory to your  `addons21`  folde
 
 #### Use
 
-Open the menu by going to `Tools>Batch-Unsuspend` Options in the Anki menu bar. Click 'Add rule' to create a rule for targeting which card tag will be unsuspended and how many cards to un-suspend at a time. Note, the cards are unsuspended from the tag group in the order of their creation date.
+Open the menu by going to `Tools>Batch-Unsuspend` Options in the Anki menu bar. Click 'Add rule' to create a rule for targeting which card tag will be unsuspended and how many cards to un-suspend at a time. Note, by default the cards are unsuspended from the tag group in the order of their creation date.
 
 Rules can be toggled on or off using their checkbox. Rules can be deleted or edited from their respective options menu.
 
 When 'Un-suspend' is clicked all of the the selected rules will be executed, and the cards will be unsuspended.
 
+[Update for the Qt6.6.2 Anki 24.11 version]
+As many other addons (AnkiMorphs/MorphMan etc) alter the 'Due' so as to optimise the learning order of cards, you may wish to unsuspend according to this prioritisation instead.
+
+![](./assets/create_rule_2.png)
+
 Currently tested and working on
-* `macOS Qt5.14 Anki 2.1.64` and Windows `Qt6.4.3 Anki 2.1.64` (old branch)
 * `macOS 12+ Apple Silicon Qt6.6.2 Anki 24.11`
+* `macOS Qt5.14 Anki 2.1.64` and Windows `Qt6.4.3 Anki 2.1.64` (old branch)
 
 * Please make sure to back up all of your decks before using. I have been using it personally for a while now without issue, but it is always better to be safe than sorry.
