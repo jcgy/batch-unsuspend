@@ -7,7 +7,7 @@ from aqt.utils import showInfo, qconnect
 from aqt.qt import *
 import glob
 import os
-
+from . import const
 from . import options_dialog
 
 # Add the menu item to access the options dialog
@@ -21,3 +21,8 @@ action = QAction("Batch-Unsuspend Options", mw)
 qconnect(action.triggered, show_options_dialog)
 # And add it to the tools menu
 mw.form.menuTools.addAction(action)
+
+# Update config.json to have sort_method field if doesn't already
+for rule in const.CONFIG["Rules"]:
+	const.CONFIG["Rules"][rule].setdefault("sort_method", "Created")
+mw.addonManager.writeConfig(const.ADDON_NAME, const.CONFIG)

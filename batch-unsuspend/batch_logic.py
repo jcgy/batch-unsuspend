@@ -16,14 +16,24 @@ def unsuspend_cards():
 			tag = f'"{tag}"'
 		n = rule.get("cards_count")
 		active = rule.get("active")
+		sort_method = rule.get("sort_method")
 		# Set a checkpoint so batch unsuspend can be undone if needed
 		mw.checkpoint(f"Unsuspend Cards")
 		# Check if the rule is currently activated
 		if active == True:
 				# Find suspended cards for the tag
 				card_ids = mw.col.findCards(f"tag:{tag} is:suspended")
-				# Sort by their ID (which is equivalent to sorting by creation date)
-				card_ids.sort()
+				# Sprt cards depending on their sort method
+				if sort_method == "Created":
+					# Sort by their ID (which is equivalent to sorting by creation date)
+					card_ids.sort()
+				elif sort_method == "Due":
+					# Create a list of tuples with card IDs and their Due values
+					cards_with_due = [(cid, mw.col.getCard(cid).due) for cid in card_ids]
+					# Sort the list by the Due value
+					cards_with_due.sort(key=lambda x: x[1])
+					# Extract the sorted card IDs
+					card_ids = [cid for cid, _ in cards_with_due]
 				n_sus_available = len(card_ids)
 				# Give user warning if not enough to unsuspend
 				if n_sus_available == 0:

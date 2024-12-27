@@ -29,7 +29,8 @@ class CreateRuleDialog(QDialog):
 
 		layout.addWidget(QLabel("Name"), 0, 0, Qt.AlignmentFlag.AlignCenter)
 		layout.addWidget(QLabel("Tag"), 0, 1, Qt.AlignmentFlag.AlignCenter)
-		layout.addWidget(QLabel("Cards"), 0, 2, Qt.AlignmentFlag.AlignCenter)
+		layout.addWidget(QLabel("Sort by"), 0, 2, Qt.AlignmentFlag.AlignCenter)
+		layout.addWidget(QLabel("Cards"), 0, 4, Qt.AlignmentFlag.AlignCenter)
 		
 		# Initialise values and handle editing of existing rules
 		if self.rule_edit is not None:
@@ -43,7 +44,14 @@ class CreateRuleDialog(QDialog):
 			self.tag_box.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
 			self.tag_box.completer().setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
 			self.tag_box.completer().setFilterMode(Qt.MatchFlag.MatchContains)
-
+			# Add radio button for selceting sorting method
+			self.sort_selector_1 = QRadioButton("Created")
+			self.sort_selector_2 = QRadioButton("Due")
+			if const.CONFIG['Rules'][rule_edit]['sort_method'] == "Created":
+				self.sort_selector_1.setChecked(True)
+			elif const.CONFIG['Rules'][rule_edit]['sort_method'] == "Due":
+				self.sort_selector_2.setChecked(True)
+			# Add box for selecting number of cards
 			self.cards_box = QSpinBox(value=const.CONFIG['Rules'][rule_edit]['cards_count'], minimum=1, maximum=999)
 		else:
 			self.rule_name = QLineEdit()
@@ -55,13 +63,19 @@ class CreateRuleDialog(QDialog):
 			self.tag_box.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
 			self.tag_box.completer().setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
 			self.tag_box.completer().setFilterMode(Qt.MatchFlag.MatchContains)
-
+			# Add radio button for selceting sorting method
+			self.sort_selector_1 = QRadioButton("Created")
+			self.sort_selector_1.setChecked(True)
+			self.sort_selector_2 = QRadioButton("Due")
+			# Add box for selecting number of cards
 			self.cards_box = QSpinBox(minimum=1, maximum=999)
 
 		# Add widgets to gird
 		layout.addWidget(self.rule_name, 1, 0)
 		layout.addWidget(self.tag_box, 1, 1)
-		layout.addWidget(self.cards_box, 1, 2)
+		layout.addWidget(self.sort_selector_1, 1, 2)
+		layout.addWidget(self.sort_selector_2, 1, 3)
+		layout.addWidget(self.cards_box, 1, 4)
 
 		layout.addWidget(self.save_button, 2, 0, 2, 3, Qt.AlignmentFlag.AlignCenter)# Qt6,  alignment=Qt.AlignmentFlag.AlignRight)
 
@@ -69,10 +83,17 @@ class CreateRuleDialog(QDialog):
 	def save_options(self):
 		selected_rule_name = self.rule_name.text()
 		selected_tag = self.tag_box.currentText()
+
+		if self.sort_selector_1.isChecked():
+			selected_sort_method = "Created"
+		elif self.sort_selector_2.isChecked():
+			selected_sort_method = "Due"
+
 		selected_cards = self.cards_box.value()
 
 		rule_dict = {}
 		rule_dict["tag"] = selected_tag
+		rule_dict["sort_method"] = selected_sort_method
 		rule_dict["cards_count"] = selected_cards
 		rule_dict["active"] = True
 
